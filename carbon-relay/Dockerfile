@@ -1,6 +1,6 @@
 FROM registry.banno-internal.com/carbon-base
 
-ENV NODE_NAME cache
+ENV NODE_NAME relay
 ENV LOCAL_DATA_DIR /opt/graphite/storage/whisper/
 ENV MAX_CACHE_SIZE inf
 ENV MAX_UPDATES_PER_SECOND 1000
@@ -19,5 +19,4 @@ ADD run.sh /opt/graphite/
 EXPOSE 2003 2004 7002
 
 WORKDIR /opt/graphite
-
 CMD ["./run.sh"]
