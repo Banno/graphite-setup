@@ -1,0 +1,38 @@
+cache1:
+  image: registry.banno-internal.com/carbon-cache
+  ports:
+    - "7012:7002"
+    - "2013:2003"
+    - "2014:2004"
+  volumes_from:
+    - data
+
+data:
+  image: registry.banno-internal.com/carbon-base
+  volumes:
+    - /opt/graphite/storage/whisper:/tmp/data
+  command: "/bin/sh"
+
+web:
+  image: registry.banno-internal.com/graphite-web
+  environment:
+    CARBONLINK_HOSTS: "172.17.42.1:2014:a"
+  ports:
+    - "80:80"
+  volumes_from:
+    - data
+  
+    
+# carbon2:
+#   image: nacyot/carbon-cache
+#   ports:
+#     - "7022:7002"
+#     - "2023:2003"
+#     - "2024:2004"
+
+# carbon3:
+#   image: nacyot/carbon-cache
+#   ports:
+#     - "7032:7002"
+#     - "2033:2003"
+#     - "2034:2004"
