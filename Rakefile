@@ -1,5 +1,7 @@
 version = "0.9.12"
 
+## Builders
+
 desc "Build the base image"
 task :build_base do
   sh "docker build -t registry.banno-internal.com/carbon-base:#{version} carbon-base"
@@ -24,6 +26,14 @@ task :build_relay do
   sh "docker tag -f registry.banno-internal.com/carbon-relay:#{version} registry.banno-internal.com/carbon-relay:latest"
 end
 
+desc "Build the whisper data image"
+task :build_whisper do
+  sh "docker build -t registry.banno-internal.com/graphite-whisper:#{version} whisper"
+  sh "docker tag -f registry.banno-internal.com/graphite-whisper:#{version} registry.banno-internal.com/graphite-whisper:latest"
+end
+
+## Runners
+
 desc "Run the cache image"
 task :run_cache do
   sh "fig run cache1"
@@ -39,20 +49,24 @@ task :run_web do
   sh "fig run web"
 end
 
-desc "Run the cache image"
+## Enter for debugging
+
+desc "Enter the cache image"
 task :enter_cache do
-  sh "fig run cache1 bash"
+  sh "docker exec -it graphitesetup_cache1_1 bash"
 end
 
-desc "Run the relay image"
+desc "Enter the relay image"
 task :enter_relay do
-  sh "fig run relay bash"
+  sh "docker exec -it graphitesetup_relay_1 bash"
 end
 
-desc "Run the relay image"
+desc "Enter the relay image"
 task :enter_web do
-  sh "fig run web bash"
+  sh "docker exec -it graphitesetup_web_1 bash"
 end
+
+## Upload everything to registry
 
 desc "Push the base image to our registry"
 task :push do
@@ -62,7 +76,11 @@ task :push do
   sh "docker push registry.banno-internal.com/carbon-cache:latest"
   sh "docker push registry.banno-internal.com/graphite-web:#{version}"
   sh "docker push registry.banno-internal.com/graphite-web:latest"
+  sh "docker push registry.banno-internal.com/graphite-whisper:#{version}"
+  sh "docker push registry.banno-internal.com/graphite-whisper:latest"
 end
+
+## testing
 
 desc "Start up the containers, daemonized"
 task :up do
@@ -70,7 +88,7 @@ task :up do
 end
 
 desc "Kill the containers"
-task :down do
+task :kill do
   sh "fig kill"
   sh "fig rm"
 end
