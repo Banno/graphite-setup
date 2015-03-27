@@ -13,11 +13,17 @@ web:
   environment:
     CARBONLINK_HOSTS: "172.17.42.1:7002"
   ports:
-    - "80:80"
+    - "8080:80"
   volumes_from:
     - whisper
-  
+
 whisper:
   image: registry.banno-internal.com/graphite-whisper
   volumes:
     - /opt/graphite/storage/whisper:/opt/graphite/storage/whisper
+
+
+grafana:
+  image: registry.banno-internal.com/grafana
+  ports:
+    - "80:8081"

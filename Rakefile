@@ -32,6 +32,12 @@ task :build_whisper do
   sh "docker tag -f registry.banno-internal.com/graphite-whisper:#{version} registry.banno-internal.com/graphite-whisper:latest"
 end
 
+desc "Build the grafana image"
+task :build_grafana do
+  sh "docker build -t registry.banno-internal.com/grafana:#{version} grafana"
+  sh "docker tag -f registry.banno-internal.com/grafana:#{version} registry.banno-internal.com/grafana:latest"
+end
+
 ## Runners
 
 desc "Run the cache image"
@@ -49,6 +55,11 @@ task :run_web do
   sh "fig run web"
 end
 
+desc "Run the grafana image"
+task :run_web do
+  sh "fig run grafana"
+end
+
 ## Enter for debugging
 
 desc "Enter the cache image"
@@ -61,9 +72,14 @@ task :enter_relay do
   sh "docker exec -it graphitesetup_relay_1 bash"
 end
 
-desc "Enter the relay image"
+desc "Enter the web image"
 task :enter_web do
   sh "docker exec -it graphitesetup_web_1 bash"
+end
+
+desc "Enter the grafna image"
+task :enter_grafana do
+  sh "docker exec -it graphitesetup_grafana_1 bash"
 end
 
 ## Upload everything to registry
@@ -78,6 +94,8 @@ task :push do
   sh "docker push registry.banno-internal.com/graphite-web:latest"
   sh "docker push registry.banno-internal.com/graphite-whisper:#{version}"
   sh "docker push registry.banno-internal.com/graphite-whisper:latest"
+  sh "docker push registry.banno-internal.com/grafana:#{version}"
+  sh "docker push registry.banno-internal.com/grafana:latest"
 end
 
 ## testing
@@ -97,10 +115,10 @@ desc "Roll the containers"
 task :roll do
   sh "fig kill"
   sh "fig rm"
-  sh "fig up -d"  
+  sh "fig up -d"
 end
 
 desc "Write data to carbon-cache"
 task :write_data do
-  sh "echo 'local.random.diceroll #{Random.rand(10)} `date +%s`' | nc -c 192.168.59.103 2003 && sleep 2"
+  sh %<echo "local.random.diceroll #{Random.rand(10)} `date +%s`" | nc -c 192.168.59.103 2003 && sleep 2>
 end
