@@ -19,4 +19,4 @@ web:
 whisper:
   image: registry.banno-internal.com/graphite-whisper
   volumes:
-    - /opt/graphite/storage/whisper
+    - /opt/graphite/storage/whisper:/opt/graphite/storage/whisper
