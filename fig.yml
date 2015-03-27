@@ -1,16 +1,17 @@
 cache1:
+  hostname: cache1
   image: registry.banno-internal.com/carbon-cache
   ports:
-    - "7012:7002"
-    - "2013:2003"
-    - "2014:2004"
+    - "7002:7002"
+    - "2003:2003"
+    - "2004:2004"
   volumes_from:
     - whisper
 
 web:
   image: registry.banno-internal.com/graphite-web
   environment:
-    CARBONLINK_HOSTS: "172.17.42.1:2014"
+    CARBONLINK_HOSTS: "172.17.42.1:7002"
   ports:
     - "80:80"
   volumes_from:
