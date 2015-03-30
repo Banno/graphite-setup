@@ -1,4 +1,4 @@
-banno_version = "banno-0.0.1"
+banno_version = "banno-0.0.2"
 graphite_version = "0.9.12"
 grafana_version = "1.9.0"
 
