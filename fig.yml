@@ -1,3 +1,18 @@
+grafana:
+  image: registry.banno-internal.com/grafana
+  ports:
+    - "80:8081"
+
+web:
+  image: registry.banno-internal.com/graphite-web
+  environment:
+    CLUSTER_SERVERS: weba:80,webb:80
+  ports:
+    - "8080:80"
+  links:
+    - weba
+    - webb
+
 relay:
   image: registry.banno-internal.com/carbon-relay
   ports:
@@ -5,61 +20,129 @@ relay:
     - "2004:2004"
   environment:
     RELAY_METHOD: consistent-hashing
-    DESTINATIONS: cache1:2014:1, cache2:2024:2
+    DESTINATIONS: relaya:2104, relayb:2204
   links:
-    - cache1
-    - cache2
+    - relaya
+    - relayb
 
-cache1:
-  hostname: cache1
+weba:
+  image: registry.banno-internal.com/graphite-web
+  volumes_from:
+    - whispera
+  environment:
+    CARBONLINK_HOSTS: cache1a:7012,cache2a:7022
+  ports:
+    - "8180:80"
+  links:
+    - cache1a
+    - cache2a
+
+relaya:
+  image: registry.banno-internal.com/carbon-relay
+  ports:
+    - "2103:2103"
+    - "2104:2104"
+  environment:
+    LINE_RECEIVER_PORT: 2103
+    PICKLE_RECEIVER_PORT: 2104
+    RELAY_METHOD: consistent-hashing
+    DESTINATIONS: cache1a:2014:1a, cache2a:2024:2a
+  links:
+    - cache1a
+    - cache2a
+
+cache1a:
   image: registry.banno-internal.com/carbon-cache
   volumes_from:
-    - whisper
+    - whispera
   ports:
     - "7012:7012"
     - "2013:2013"
     - "2014:2014"
   environment:
-    NODE_NAME: cache:1
+    NODE_NAME: cache:1a
     LINE_RECEIVER_PORT: 2013
     PICKLE_RECEIVER_PORT: 2014
     CACHE_QUERY_PORT: 7012
-  command: --instance=1
+  command: --instance=1a
 
-
-cache2:
-  hostname: cache2
+cache2a:
   image: registry.banno-internal.com/carbon-cache
   volumes_from:
-    - whisper
+    - whispera
   ports:
     - "7022:7022"
     - "2023:2023"
     - "2024:2024"
   environment:
-    NODE_NAME: cache:2
+    NODE_NAME: cache:2a
     LINE_RECEIVER_PORT: 2023
     PICKLE_RECEIVER_PORT: 2024
     CACHE_QUERY_PORT: 7022
-  command: --instance=2
+  command: --instance=2a
 
-
-web:
-  image: registry.banno-internal.com/graphite-web
-  environment:
-    CARBONLINK_HOSTS: "172.17.42.1:7012, 172.17.42.1:7022"
-  ports:
-    - "8080:80"
-  volumes_from:
-    - whisper
-
-whisper:
+whispera:
   image: registry.banno-internal.com/graphite-whisper
   volumes:
-    - /opt/graphite/storage/whisper:/opt/graphite/storage/whisper
+    - /opt/graphite/storage/whisper:/tmp/whispera
 
-
-grafana:
-  image: registry.banno-internal.com/grafana
+webb:
+  image: registry.banno-internal.com/graphite-web
+  volumes_from:
+    - whisperb
+  environment:
+    CARBONLINK_HOSTS: cache1b:7112,cache2b:7122
   ports:
-    - "80:8081"
+    - "8280:80"
+  links:
+    - cache1b
+    - cache2b
+
+relayb:
+  image: registry.banno-internal.com/carbon-relay
+  ports:
+    - "2203:2203"
+    - "2204:2204"
+  environment:
+    LINE_RECEIVER_PORT: 2203
+    PICKLE_RECEIVER_PORT: 2204
+    RELAY_METHOD: consistent-hashing
+    DESTINATIONS: cache1b:2114:1b, cache2b:2124:2b
+  links:
+    - cache1b
+    - cache2b
+
+cache1b:
+  image: registry.banno-internal.com/carbon-cache
+  volumes_from:
+    - whisperb
+  ports:
+    - "7112:7112"
+    - "2113:2113"
+    - "2114:2114"
+  environment:
+    NODE_NAME: cache:1b
+    LINE_RECEIVER_PORT: 2113
+    PICKLE_RECEIVER_PORT: 2114
+    CACHE_QUERY_PORT: 7112
+  command: --instance=1b
+
+cache2b:
+  image: registry.banno-internal.com/carbon-cache
+  volumes_from:
+    - whisperb
+  ports:
+    - "7122:7122"
+    - "2123:2123"
+    - "2124:2124"
+  environment:
+    NODE_NAME: cache:2b
+    LINE_RECEIVER_PORT: 2123
+    PICKLE_RECEIVER_PORT: 2124
+    CACHE_QUERY_PORT: 7122
+  command: --instance=2b
+
+whisperb:
+  image: registry.banno-internal.com/graphite-whisper
+  volumes:
+    - /opt/graphite/storage/whisper:/tmp/whisperb
