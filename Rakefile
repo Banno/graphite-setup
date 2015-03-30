@@ -3,10 +3,10 @@ graphite_version = "0.9.12"
 grafana_version = "1.9.0"
 
 ## Builders
-namespace :build do
-  desc "Builds all docker images"
-  task :all => ["build:base", "build:cache", "build:web", "build:relay", "build:whisper", "build:grafana"]
+desc "Builds all docker images"
+task :build => ["build:base", "build:cache", "build:web", "build:relay", "build:whisper", "build:grafana"]
 
+namespace :build do
   desc "Build the base image"
   task :base do
     sh "docker build -t registry.banno-internal.com/carbon-base:#{graphite_version}-#{banno_version} carbon-base"
