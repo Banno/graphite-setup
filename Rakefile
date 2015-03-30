@@ -1,101 +1,102 @@
-version = "0.9.12"
+graphite_version = "0.9.12"
+grafana_version = "1.9.0"
 
 ## Builders
+namespace :build do
+  desc "Builds all docker images"
+  task :all => ["build:base", "build:cache", "build:web", "build:relay", "build:whisper", "build:grafana"]
 
-desc "Build the base image"
-task :build_base do
-  sh "docker build -t registry.banno-internal.com/carbon-base:#{version} carbon-base"
-  sh "docker tag -f registry.banno-internal.com/carbon-base:#{version} registry.banno-internal.com/carbon-base:latest"
-end
+  desc "Build the base image"
+  task :base do
+    sh "docker build -t registry.banno-internal.com/carbon-base:#{graphite_version} carbon-base"
+    sh "docker tag -f registry.banno-internal.com/carbon-base:#{graphite_version} registry.banno-internal.com/carbon-base:latest"
+  end
 
-desc "Build the cache image"
-task :build_cache do
-  sh "docker build -t registry.banno-internal.com/carbon-cache:#{version} carbon-cache"
-  sh "docker tag -f registry.banno-internal.com/carbon-cache:#{version} registry.banno-internal.com/carbon-cache:latest"
-end
+  desc "Build the cache image"
+  task :cache do
+    sh "docker build -t registry.banno-internal.com/carbon-cache:#{graphite_version} carbon-cache"
+    sh "docker tag -f registry.banno-internal.com/carbon-cache:#{graphite_version} registry.banno-internal.com/carbon-cache:latest"
+  end
 
-desc "Build the web image"
-task :build_web do
-  sh "docker build -t registry.banno-internal.com/graphite-web:#{version} web"
-  sh "docker tag -f registry.banno-internal.com/graphite-web:#{version} registry.banno-internal.com/graphite-web:latest"
-end
+  desc "Build the web image"
+  task :web do
+    sh "docker build -t registry.banno-internal.com/graphite-web:#{graphite_version} web"
+    sh "docker tag -f registry.banno-internal.com/graphite-web:#{graphite_version} registry.banno-internal.com/graphite-web:latest"
+  end
 
-desc "Build the relay image"
-task :build_relay do
-  sh "docker build -t registry.banno-internal.com/carbon-relay:#{version} carbon-relay"
-  sh "docker tag -f registry.banno-internal.com/carbon-relay:#{version} registry.banno-internal.com/carbon-relay:latest"
-end
+  desc "Build the relay image"
+  task :relay do
+    sh "docker build -t registry.banno-internal.com/carbon-relay:#{graphite_version} carbon-relay"
+    sh "docker tag -f registry.banno-internal.com/carbon-relay:#{graphite_version} registry.banno-internal.com/carbon-relay:latest"
+  end
 
-desc "Build the whisper data image"
-task :build_whisper do
-  sh "docker build -t registry.banno-internal.com/graphite-whisper:#{version} whisper"
-  sh "docker tag -f registry.banno-internal.com/graphite-whisper:#{version} registry.banno-internal.com/graphite-whisper:latest"
-end
+  desc "Build the whisper data image"
+  task :whisper do
+    sh "docker build -t registry.banno-internal.com/graphite-whisper:#{graphite_version} whisper"
+    sh "docker tag -f registry.banno-internal.com/graphite-whisper:#{graphite_version} registry.banno-internal.com/graphite-whisper:latest"
+  end
 
-desc "Build the grafana image"
-task :build_grafana do
-  sh "docker build -t registry.banno-internal.com/grafana:#{version} grafana"
-  sh "docker tag -f registry.banno-internal.com/grafana:#{version} registry.banno-internal.com/grafana:latest"
+  desc "Build the grafana image"
+  task :grafana do
+    sh "docker build -t registry.banno-internal.com/grafana:#{grafana_version} grafana"
+    sh "docker tag -f registry.banno-internal.com/grafana:#{grafana_version} registry.banno-internal.com/grafana:latest"
+  end
 end
 
 ## Runners
+namespace :run do
+  desc "Run the cache image"
+  task :cache do
+    sh "fig run cache1"
+  end
 
-desc "Run the cache image"
-task :run_cache do
-  sh "fig run cache1"
-end
+  desc "Run the relay image"
+  task :relay do
+    sh "fig run relay"
+  end
 
-desc "Run the relay image"
-task :run_relay do
-  sh "fig run relay"
-end
+  desc "Run the web image"
+  task :web do
+    sh "fig run web"
+  end
 
-desc "Run the web image"
-task :run_web do
-  sh "fig run web"
-end
-
-desc "Run the grafana image"
-task :run_web do
-  sh "fig run grafana"
+  desc "Run the grafana image"
+  task :grafana do
+    sh "fig run grafana"
+  end
 end
 
 ## Enter for debugging
+namespace :enter do
+  desc "Enter the cache image"
+  task :cache do
+    sh "docker exec -it graphitesetup_cache1_1 bash"
+  end
 
-desc "Enter the cache image"
-task :enter_cache do
-  sh "docker exec -it graphitesetup_cache1_1 bash"
+  desc "Enter the relay image"
+  task :relay do
+    sh "docker exec -it graphitesetup_relay_1 bash"
+  end
+
+  desc "Enter the web image"
+  task :web do
+    sh "docker exec -it graphitesetup_web_1 bash"
+  end
+
+  desc "Enter the grafna image"
+  task :grafana do
+    sh "docker exec -it graphitesetup_grafana_1 bash"
+  end
 end
-
-desc "Enter the relay image"
-task :enter_relay do
-  sh "docker exec -it graphitesetup_relay_1 bash"
-end
-
-desc "Enter the web image"
-task :enter_web do
-  sh "docker exec -it graphitesetup_web_1 bash"
-end
-
-desc "Enter the grafna image"
-task :enter_grafana do
-  sh "docker exec -it graphitesetup_grafana_1 bash"
-end
-
 ## Upload everything to registry
 
-desc "Push the base image to our registry"
+desc "Push all images to our registry"
 task :push do
-  sh "docker push registry.banno-internal.com/carbon-base:#{version}"
-  sh "docker push registry.banno-internal.com/carbon-base:latest"
-  sh "docker push registry.banno-internal.com/carbon-cache:#{version}"
-  sh "docker push registry.banno-internal.com/carbon-cache:latest"
-  sh "docker push registry.banno-internal.com/graphite-web:#{version}"
-  sh "docker push registry.banno-internal.com/graphite-web:latest"
-  sh "docker push registry.banno-internal.com/graphite-whisper:#{version}"
-  sh "docker push registry.banno-internal.com/graphite-whisper:latest"
-  sh "docker push registry.banno-internal.com/grafana:#{version}"
-  sh "docker push registry.banno-internal.com/grafana:latest"
+  sh "docker push registry.banno-internal.com/carbon-base"
+  sh "docker push registry.banno-internal.com/carbon-cache"
+  sh "docker push registry.banno-internal.com/graphite-web"
+  sh "docker push registry.banno-internal.com/graphite-whisper"
+  sh "docker push registry.banno-internal.com/grafana"
 end
 
 ## testing
