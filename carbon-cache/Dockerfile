@@ -20,4 +20,4 @@ EXPOSE 2003 2004 7002
 
 WORKDIR /opt/graphite
 
-CMD ["./run.sh"]
+ENTRYPOINT ["./run.sh"]

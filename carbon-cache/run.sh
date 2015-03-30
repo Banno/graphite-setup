@@ -13,4 +13,4 @@ sed -i -e "s/\(LINE_RECEIVER_PORT\).*$/\1 = ${LINE_RECEIVER_PORT}/g" ./conf/carb
 sed -i -e "s/\(PICKLE_RECEIVER_PORT\).*$/\1 = ${PICKLE_RECEIVER_PORT}/g" ./conf/carbon.conf
 sed -i -e "s/\(CACHE_QUERY_PORT\).*$/\1 = ${CACHE_QUERY_PORT}/g" ./conf/carbon.conf
 
-/opt/graphite/bin/carbon-cache.py --debug start
+/opt/graphite/bin/carbon-cache.py --debug "$@" start
