@@ -47,7 +47,7 @@ cache2:
 web:
   image: registry.banno-internal.com/graphite-web
   environment:
-    CARBONLINK_HOSTS: "172.17.42.1:7002"
+    CARBONLINK_HOSTS: "172.17.42.1:7012, 172.17.42.1:7022"
   ports:
     - "8080:80"
   volumes_from:
