@@ -122,5 +122,5 @@ end
 
 desc "Write data to carbon-cache"
 task :write_data do
-  sh %<echo "local.random.diceroll #{Random.rand(10)} `date +%s`" | nc -c 192.168.59.103 2003>
+  sh %<echo "test.#{(0...Random.rand(50)).map { ('a'..'z').to_a[rand(26)] }.join} #{Random.rand(10)} `date +%s`" | nc -c 192.168.59.103 2003>
 end
