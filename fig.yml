@@ -1,12 +1,48 @@
+relay:
+  image: registry.banno-internal.com/carbon-relay
+  ports:
+    - "2003:2003"
+    - "2004:2004"
+  environment:
+    RELAY_METHOD: consistent-hashing
+    DESTINATIONS: cache1:2014:1, cache2:2024:2
+  links:
+    - cache1
+    - cache2
+
 cache1:
   hostname: cache1
   image: registry.banno-internal.com/carbon-cache
-  ports:
-    - "7002:7002"
-    - "2003:2003"
-    - "2004:2004"
   volumes_from:
     - whisper
+  ports:
+    - "7012:7012"
+    - "2013:2013"
+    - "2014:2014"
+  environment:
+    NODE_NAME: cache:1
+    LINE_RECEIVER_PORT: 2013
+    PICKLE_RECEIVER_PORT: 2014
+    CACHE_QUERY_PORT: 7012
+  command: --instance=1
+
+
+cache2:
+  hostname: cache2
+  image: registry.banno-internal.com/carbon-cache
+  volumes_from:
+    - whisper
+  ports:
+    - "7022:7022"
+    - "2023:2023"
+    - "2024:2024"
+  environment:
+    NODE_NAME: cache:2
+    LINE_RECEIVER_PORT: 2023
+    PICKLE_RECEIVER_PORT: 2024
+    CACHE_QUERY_PORT: 7022
+  command: --instance=2
+
 
 web:
   image: registry.banno-internal.com/graphite-web
