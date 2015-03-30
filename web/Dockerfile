@@ -26,7 +26,7 @@ RUN mkdir -p /opt/graphite/webapp && \
     chmod 0664 /opt/graphite/storage/graphite.db
 
 # Copy configuration files
-ADD ./config/local_settings.py /opt/graphite/webapp/graphite/local_settings.py 
+ADD ./config/local_settings.py /opt/graphite/webapp/graphite/local_settings.py
 ADD ./config/initial_data.json /opt/graphite/webapp/graphite/initial_data.json
 ADD ./config/nginx.conf /etc/nginx/nginx.conf
 ADD ./config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
