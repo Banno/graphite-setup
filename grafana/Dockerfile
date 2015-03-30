@@ -12,9 +12,6 @@ RUN cd /opt && \
 # config file
 ADD config/config.js /opt/grafana/config.js
 
-# dashboards
-#ADD ./dashboards/annotations.json /src/grafana/app/dashboards/annotations.json
-
 WORKDIR /opt/grafana
 
 EXPOSE 8081
