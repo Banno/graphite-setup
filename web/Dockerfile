@@ -29,7 +29,7 @@ RUN mkdir -p /opt/graphite/webapp && \
 ADD ./config/local_settings.py /opt/graphite/webapp/graphite/local_settings.py
 ADD ./config/initial_data.json /opt/graphite/webapp/graphite/initial_data.json
 ADD ./config/nginx.conf /etc/nginx/nginx.conf
-ADD ./config/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+ADD ./config/supervisord.conf /etc/supervisor/supervisord.conf
 
 # Initialize database(sqlite3)
 RUN cd /opt/graphite/webapp/graphite && django-admin.py syncdb --settings=graphite.settings --noinput
@@ -38,4 +38,4 @@ RUN cd /opt/graphite/webapp/graphite && django-admin.py loaddata --settings=grap
 # Set CMD
 WORKDIR /opt/graphite/webapp
 EXPOSE 80
-CMD ["/usr/bin/supervisord", "-n"]
+CMD ["/usr/bin/supervisord"]
