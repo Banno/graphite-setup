@@ -108,17 +108,17 @@ end
 desc "Kill the containers"
 task :kill do
   sh "fig kill"
-  sh "fig rm"
+  sh "fig rm --force"
 end
 
 desc "Roll the containers"
 task :roll do
   sh "fig kill"
-  sh "fig rm"
+  sh "fig rm --force"
   sh "fig up -d"
 end
 
 desc "Write data to carbon-cache"
 task :write_data do
-  sh %<echo "local.random.diceroll #{Random.rand(10)} `date +%s`" | nc -c 192.168.59.103 2003 && sleep 2>
+  sh %<echo "local.random.diceroll #{Random.rand(10)} `date +%s`" | nc -c 192.168.59.103 2003>
 end
