@@ -2,6 +2,8 @@ grafana:
   image: registry.banno-internal.com/grafana
   ports:
     - "80:8081"
+  links:
+    - web
 
 web:
   image: registry.banno-internal.com/graphite-web
@@ -28,9 +30,10 @@ relay:
 weba:
   image: registry.banno-internal.com/graphite-web
   volumes_from:
-    - whispera
+    - whisper
   environment:
     CARBONLINK_HOSTS: cache1a:7012,cache2a:7022
+    WHISPER_DIR: /opt/graphite/storage/whispera
   ports:
     - "8180:80"
   links:
@@ -54,7 +57,7 @@ relaya:
 cache1a:
   image: registry.banno-internal.com/carbon-cache
   volumes_from:
-    - whispera
+    - whisper
   ports:
     - "7012:7012"
     - "2013:2013"
@@ -64,12 +67,13 @@ cache1a:
     LINE_RECEIVER_PORT: 2013
     PICKLE_RECEIVER_PORT: 2014
     CACHE_QUERY_PORT: 7012
+    LOCAL_DATA_DIR: /opt/graphite/storage/whispera
   command: --instance=1a
 
 cache2a:
   image: registry.banno-internal.com/carbon-cache
   volumes_from:
-    - whispera
+    - whisper
   ports:
     - "7022:7022"
     - "2023:2023"
@@ -79,19 +83,16 @@ cache2a:
     LINE_RECEIVER_PORT: 2023
     PICKLE_RECEIVER_PORT: 2024
     CACHE_QUERY_PORT: 7022
+    LOCAL_DATA_DIR: /opt/graphite/storage/whispera
   command: --instance=2a
-
-whispera:
-  image: registry.banno-internal.com/graphite-whisper
-  volumes:
-    - /opt/graphite/storage/whisper:/tmp/whispera
 
 webb:
   image: registry.banno-internal.com/graphite-web
   volumes_from:
-    - whisperb
+    - whisper
   environment:
     CARBONLINK_HOSTS: cache1b:7112,cache2b:7122
+    WHISPER_DIR: /opt/graphite/storage/whisperb
   ports:
     - "8280:80"
   links:
@@ -115,7 +116,7 @@ relayb:
 cache1b:
   image: registry.banno-internal.com/carbon-cache
   volumes_from:
-    - whisperb
+    - whisper
   ports:
     - "7112:7112"
     - "2113:2113"
@@ -125,12 +126,13 @@ cache1b:
     LINE_RECEIVER_PORT: 2113
     PICKLE_RECEIVER_PORT: 2114
     CACHE_QUERY_PORT: 7112
+    LOCAL_DATA_DIR: /opt/graphite/storage/whisperb
   command: --instance=1b
 
 cache2b:
   image: registry.banno-internal.com/carbon-cache
   volumes_from:
-    - whisperb
+    - whisper
   ports:
     - "7122:7122"
     - "2123:2123"
@@ -140,9 +142,20 @@ cache2b:
     LINE_RECEIVER_PORT: 2123
     PICKLE_RECEIVER_PORT: 2124
     CACHE_QUERY_PORT: 7122
+    LOCAL_DATA_DIR: /opt/graphite/storage/whisperb
   command: --instance=2b
 
-whisperb:
-  image: registry.banno-internal.com/graphite-whisper
+whisper:
+  image: busybox
   volumes:
-    - /opt/graphite/storage/whisper:/tmp/whisperb
+    - /tmp/whispera:/opt/graphite/storage/whispera
+    - /tmp/whisperb:/opt/graphite/storage/whisperb
+
+test:
+  build: ./test
+  links:
+    - grafana
+    - web
+    - relay
+  volumes_from:
+    - whisper
