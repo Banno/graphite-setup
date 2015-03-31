@@ -1,4 +1,4 @@
-FROM registry.banno-internal.com/carbon-base
+FROM banno/carbon-base
 
 ENV NODE_NAME cache
 ENV LOCAL_DATA_DIR /opt/graphite/storage/whisper/

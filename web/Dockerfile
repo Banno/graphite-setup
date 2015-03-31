@@ -1,4 +1,4 @@
-FROM registry.banno-internal.com/carbon-base
+FROM banno/carbon-base
 
 # Install Base Packages
 RUN apt-get -y update && \
