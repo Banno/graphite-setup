@@ -1,12 +1,12 @@
 grafana:
-  image: registry.banno-internal.com/grafana
+  image: banno/grafana
   ports:
     - "80:8081"
   links:
     - web
 
 web:
-  image: registry.banno-internal.com/graphite-web
+  image: banno/graphite-web
   environment:
     CLUSTER_SERVERS: weba:80,webb:80
   ports:
@@ -16,7 +16,7 @@ web:
     - webb
 
 relay:
-  image: registry.banno-internal.com/carbon-relay
+  image: banno/carbon-relay
   ports:
     - "2003:2003"
     - "2004:2004"
@@ -28,7 +28,7 @@ relay:
     - relayb
 
 weba:
-  image: registry.banno-internal.com/graphite-web
+  image: banno/graphite-web
   volumes_from:
     - whisper
   environment:
@@ -41,7 +41,7 @@ weba:
     - cache2a
 
 relaya:
-  image: registry.banno-internal.com/carbon-relay
+  image: banno/carbon-relay
   ports:
     - "2103:2103"
     - "2104:2104"
@@ -55,7 +55,7 @@ relaya:
     - cache2a
 
 cache1a:
-  image: registry.banno-internal.com/carbon-cache
+  image: banno/carbon-cache
   volumes_from:
     - whisper
   ports:
@@ -71,7 +71,7 @@ cache1a:
   command: --instance=1a
 
 cache2a:
-  image: registry.banno-internal.com/carbon-cache
+  image: banno/carbon-cache
   volumes_from:
     - whisper
   ports:
@@ -87,7 +87,7 @@ cache2a:
   command: --instance=2a
 
 webb:
-  image: registry.banno-internal.com/graphite-web
+  image: banno/graphite-web
   volumes_from:
     - whisper
   environment:
@@ -100,7 +100,7 @@ webb:
     - cache2b
 
 relayb:
-  image: registry.banno-internal.com/carbon-relay
+  image: banno/carbon-relay
   ports:
     - "2203:2203"
     - "2204:2204"
@@ -114,7 +114,7 @@ relayb:
     - cache2b
 
 cache1b:
-  image: registry.banno-internal.com/carbon-cache
+  image: banno/carbon-cache
   volumes_from:
     - whisper
   ports:
@@ -130,7 +130,7 @@ cache1b:
   command: --instance=1b
 
 cache2b:
-  image: registry.banno-internal.com/carbon-cache
+  image: banno/carbon-cache
   volumes_from:
     - whisper
   ports:

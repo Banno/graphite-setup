@@ -9,32 +9,32 @@ task :build => ["build:base", "build:cache", "build:web", "build:relay", "build:
 namespace :build do
   desc "Build the base image"
   task :base do
-    sh "docker build -t registry.banno-internal.com/carbon-base:#{graphite_version}-#{banno_version} carbon-base"
-    sh "docker tag -f registry.banno-internal.com/carbon-base:#{graphite_version}-#{banno_version} registry.banno-internal.com/carbon-base:latest"
+    sh "docker build -t banno/carbon-base:#{graphite_version}-#{banno_version} carbon-base"
+    sh "docker tag -f banno/carbon-base:#{graphite_version}-#{banno_version} banno/carbon-base:latest"
   end
 
   desc "Build the cache image"
   task :cache do
-    sh "docker build -t registry.banno-internal.com/carbon-cache:#{graphite_version}-#{banno_version} carbon-cache"
-    sh "docker tag -f registry.banno-internal.com/carbon-cache:#{graphite_version}-#{banno_version} registry.banno-internal.com/carbon-cache:latest"
+    sh "docker build -t banno/carbon-cache:#{graphite_version}-#{banno_version} carbon-cache"
+    sh "docker tag -f banno/carbon-cache:#{graphite_version}-#{banno_version} banno/carbon-cache:latest"
   end
 
   desc "Build the web image"
   task :web do
-    sh "docker build -t registry.banno-internal.com/graphite-web:#{graphite_version}-#{banno_version} web"
-    sh "docker tag -f registry.banno-internal.com/graphite-web:#{graphite_version}-#{banno_version} registry.banno-internal.com/graphite-web:latest"
+    sh "docker build -t banno/graphite-web:#{graphite_version}-#{banno_version} web"
+    sh "docker tag -f banno/graphite-web:#{graphite_version}-#{banno_version} banno/graphite-web:latest"
   end
 
   desc "Build the relay image"
   task :relay do
-    sh "docker build -t registry.banno-internal.com/carbon-relay:#{graphite_version}-#{banno_version} carbon-relay"
-    sh "docker tag -f registry.banno-internal.com/carbon-relay:#{graphite_version}-#{banno_version} registry.banno-internal.com/carbon-relay:latest"
+    sh "docker build -t banno/carbon-relay:#{graphite_version}-#{banno_version} carbon-relay"
+    sh "docker tag -f banno/carbon-relay:#{graphite_version}-#{banno_version} banno/carbon-relay:latest"
   end
 
   desc "Build the grafana image"
   task :grafana do
-    sh "docker build -t registry.banno-internal.com/grafana:#{grafana_version}-#{banno_version} grafana"
-    sh "docker tag -f registry.banno-internal.com/grafana:#{grafana_version}-#{banno_version} registry.banno-internal.com/grafana:latest"
+    sh "docker build -t banno/grafana:#{grafana_version}-#{banno_version} grafana"
+    sh "docker tag -f banno/grafana:#{grafana_version}-#{banno_version} banno/grafana:latest"
   end
 end
 
@@ -64,10 +64,10 @@ end
 
 desc "Push all images to our registry"
 task :push do
-  sh "docker push registry.banno-internal.com/carbon-base"
-  sh "docker push registry.banno-internal.com/carbon-cache"
-  sh "docker push registry.banno-internal.com/graphite-web"
-  sh "docker push registry.banno-internal.com/grafana"
+  sh "docker push banno/carbon-base"
+  sh "docker push banno/carbon-cache"
+  sh "docker push banno/graphite-web"
+  sh "docker push banno/grafana"
 end
 
 ## testing
