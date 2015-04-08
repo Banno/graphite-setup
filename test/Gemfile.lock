@@ -3,10 +3,13 @@ GEM
   specs:
     diff-lcs (1.2.5)
     eventmachine (1.0.7)
+    faraday (0.9.1)
+      multipart-post (>= 1.2, < 3)
     graphite-api (0.1.5)
       eventmachine (>= 0.3.3)
       zscheduler (>= 0.0.3)
     multi_json (1.11.0)
+    multipart-post (2.0.0)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (2.9.2)
@@ -41,5 +44,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  faraday
   graphite-api
   serverspec

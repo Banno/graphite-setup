@@ -21,4 +21,13 @@ describe 'graphite' do
     expect(file('/opt/graphite/storage/whispera/test/serverspectest.wsp')).to_not be_file
     expect(file('/opt/graphite/storage/whisperb/test/serverspectest.wsp')).to be_file
   end
+
+  it 'allows data retrieval' do
+    conn = Faraday.new(:url => "http://web") do |faraday|
+      faraday.adapter Faraday.default_adapter
+    end
+    datapoints = JSON.parse(conn.get('/render?&target=test.serverspec&from=-1min&rawData=true&format=json').body).first['datapoints'].map {|k| k.first}
+    unique_datapoints = datapoints.to_set.size
+    expect(unique_datapoints).to be > 1
+  end
 end
