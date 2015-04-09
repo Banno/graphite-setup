@@ -1,6 +1,7 @@
 banno_version = "banno-0.0.2"
 graphite_version = "0.9.12"
 grafana_version = "1.9.0"
+elasticsearch_version = "1.4"
 
 ## Builders
 desc "Builds all docker images"
@@ -36,6 +37,12 @@ namespace :build do
     sh "docker build -t banno/grafana:#{grafana_version}-#{banno_version} grafana"
     sh "docker tag -f banno/grafana:#{grafana_version}-#{banno_version} banno/grafana:latest"
   end
+
+  desc "Build the graphite elasticsearch image"
+  task :grafana do
+    sh "docker build -t banno/graphite-elasticsearch:#{elasticsearch_version}-#{banno_version} elasticsearch"
+    sh "docker tag -f banno/graphite-elasticsearch:#{elasticsearch_version}-#{banno_version} banno/graphite-elasticsearch:latest"
+  end
 end
 
 ## Enter for debugging
@@ -68,6 +75,7 @@ task :push do
   sh "docker push banno/carbon-cache"
   sh "docker push banno/graphite-web"
   sh "docker push banno/grafana"
+  sh "docker push banno/graphite-elasticsearch"
 end
 
 ## testing

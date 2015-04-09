@@ -1,0 +1,4 @@
+http:
+  cors:
+    enabled: true
+    allow-headers: "X-Requested-With, Content-Type, Content-Length"

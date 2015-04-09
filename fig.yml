@@ -4,6 +4,13 @@ grafana:
     - "80:8081"
   links:
     - web
+    - elasticsearch
+
+elasticsearch:
+  image: banno/graphite-elasticsearch
+  ports:
+    - "9200:9200"
+    - "9300:9300"
 
 web:
   image: banno/graphite-web
