@@ -98,13 +98,17 @@ task :roll do
   sh "fig up -d"
 end
 
-desc "Write data to carbon-cache"
-task :write_data do
-  sh %<echo "test.#{(0...Random.rand(50)).map { ('a'..'z').to_a[rand(26)] }.join} #{Random.rand(10)} `date +%s`" | nc -c 192.168.59.103 2003>
-end
-
 desc "Build test image and run rspec tests"
 task :test do
   sh "fig build test"
   sh "fig run test"
+end
+
+desc "Write data to carbon"
+task :write_data do
+  now = Time.now.to_i
+  (1..1000000).step(50).each do |offset|
+    stamp = now - offset
+    sh %<echo "test.d8 #{Random.rand(8)} #{stamp}" | nc -c 192.168.59.103 2003>
+  end
 end
