@@ -1,20 +1,15 @@
 FROM ubuntu:14.04
 
 RUN apt-get -y update && \
-    apt-get -y install python wget
+    apt-get -y install adduser libfontconfig wget
 
 # grafana
-ENV GRAFANA_VERSION="1.9.0"
-RUN cd /opt && \
-    wget -q http://grafanarel.s3.amazonaws.com/grafana-$GRAFANA_VERSION.tar.gz && \
-    tar xzvf grafana-$GRAFANA_VERSION.tar.gz && rm grafana-$GRAFANA_VERSION.tar.gz && \
-    mv grafana-$GRAFANA_VERSION /opt/grafana
+RUN cd /tmp && \
+    wget -q https://grafanarel.s3.amazonaws.com/builds/grafana_2.0.2_amd64.deb && \
+    dpkg -i grafana_2.0.2_amd64.deb
 
-# config file
-ADD config/config.js /opt/grafana/config.js
+EXPOSE 3000
 
-WORKDIR /opt/grafana
+WORKDIR /usr/share/grafana
 
-EXPOSE 8081
-
-CMD ["python", "-m", "SimpleHTTPServer", "8081"]
+ENTRYPOINT ["/usr/sbin/grafana-server", "--config", "/etc/grafana/grafana.ini"]

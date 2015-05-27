@@ -37,12 +37,6 @@ namespace :build do
     sh "docker build -t banno/grafana:#{grafana_version}-#{banno_version} grafana"
     sh "docker tag -f banno/grafana:#{grafana_version}-#{banno_version} banno/grafana:latest"
   end
-
-  desc "Build the graphite elasticsearch image"
-  task :grafana do
-    sh "docker build -t banno/graphite-elasticsearch:#{elasticsearch_version}-#{banno_version} elasticsearch"
-    sh "docker tag -f banno/graphite-elasticsearch:#{elasticsearch_version}-#{banno_version} banno/graphite-elasticsearch:latest"
-  end
 end
 
 ## Enter for debugging
