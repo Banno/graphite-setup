@@ -15,7 +15,7 @@
 
 ## Requirements
 
-docker and fig must be installed
+docker and docker-compose must be installed
 
 ## Working with images
 
