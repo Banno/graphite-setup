@@ -82,26 +82,26 @@ end
 
 desc "Start up the containers, daemonized"
 task :up do
-  sh "fig up -d"
+  sh "docker-compose up -d"
 end
 
 desc "Kill the containers"
 task :kill do
-  sh "fig kill"
-  sh "fig rm --force"
+  sh "docker-compose kill"
+  sh "docker-compose rm --force"
 end
 
 desc "Roll the containers"
 task :roll do
-  sh "fig kill"
-  sh "fig rm --force"
-  sh "fig up -d"
+  sh "docker-compose kill"
+  sh "docker-compose rm --force"
+  sh "docker-compose up -d"
 end
 
 desc "Build test image and run rspec tests"
 task :test do
-  sh "fig build test"
-  sh "fig run test"
+  sh "docker-compose build test"
+  sh "docker-compose run test"
 end
 
 desc "Write data to carbon"
