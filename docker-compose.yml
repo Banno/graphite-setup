@@ -6,6 +6,12 @@ grafana:
     - web
     - elasticsearch
 
+haproxy:
+  image: banno/graphite-haproxy
+  net: host
+  links:
+    - relay
+
 elasticsearch:
   image: banno/graphite-elasticsearch
   ports:
@@ -25,8 +31,8 @@ web:
 relay:
   image: banno/carbon-relay
   ports:
-    - "2003:2003"
-    - "2004:2004"
+    - "3003:2003"
+    - "3004:2004"
   environment:
     RELAY_METHOD: consistent-hashing
     DESTINATIONS: relaya:2104, relayb:2204

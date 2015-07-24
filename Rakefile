@@ -43,7 +43,13 @@ namespace :build do
     sh "docker build -t banno/graphite-elasticsearch:#{elasticsearch_version}-#{banno_version} elasticsearch"
     sh "docker tag -f banno/graphite-elasticsearch:#{elasticsearch_version}-#{banno_version} banno/graphite-elasticsearch:latest"
   end
-end
+
+  desc "Build haproxy proxy"
+  task :haproxy do
+    sh "docker build -t banno/graphite-haproxy:#{banno_version}-#{banno_version} haproxy"
+    sh "docker tag -f banno/graphite-haproxy:#{banno_version}-#{banno_version} banno/graphite-haproxy:latest"
+  end
+ end
 
 ## Enter for debugging
 namespace :enter do
@@ -66,6 +72,11 @@ namespace :enter do
   task :grafana do
     sh "docker exec -it graphitesetup_grafana_1 bash"
   end
+
+  desc "Enter the nginx image"
+  task :nginx do
+    sh "docker exec -it graphitesetup_nginx_1 bash"
+  end
 end
 ## Upload everything to registry
 
@@ -76,6 +87,7 @@ task :push do
   sh "docker push banno/graphite-web"
   sh "docker push banno/grafana"
   sh "docker push banno/graphite-elasticsearch"
+  sh "docker push banno/graphite-nginx"
 end
 
 ## testing
