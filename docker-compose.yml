@@ -1,22 +1,8 @@
-grafana:
-  image: banno/grafana
-  ports:
-    - "80:8081"
-  links:
-    - web
-    - elasticsearch
-
 haproxy:
   image: banno/graphite-haproxy
   net: host
   links:
     - relay
-
-elasticsearch:
-  image: banno/graphite-elasticsearch
-  ports:
-    - "9200:9200"
-    - "9300:9300"
 
 web:
   image: banno/graphite-web
@@ -167,7 +153,6 @@ whisper:
 test:
   build: ./test
   links:
-    - grafana
     - web
     - relay
   volumes_from:

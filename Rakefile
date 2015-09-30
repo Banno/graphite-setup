@@ -1,11 +1,9 @@
 banno_version = "banno-0.0.2"
-graphite_version = "0.9.12"
-grafana_version = "1.9.0"
-elasticsearch_version = "1.4"
+graphite_version = File.read("./carbon-base/Dockerfile").scan(/ENV GRAPHITE_VERSION ([0-9\.]+)/m)[0][0]
 
 ## Builders
 desc "Builds all docker images"
-task :build => ["build:base", "build:cache", "build:web", "build:relay", "build:grafana"]
+task :build => ["build:base", "build:cache", "build:web", "build:relay"]
 
 namespace :build do
   desc "Build the base image"
@@ -32,62 +30,19 @@ namespace :build do
     sh "docker tag -f banno/carbon-relay:#{graphite_version}-#{banno_version} banno/carbon-relay:latest"
   end
 
-  desc "Build the grafana image"
-  task :grafana do
-    sh "docker build -t banno/grafana:#{grafana_version}-#{banno_version} grafana"
-    sh "docker tag -f banno/grafana:#{grafana_version}-#{banno_version} banno/grafana:latest"
-  end
-
-  desc "Build the graphite elasticsearch image"
-  task :grafana do
-    sh "docker build -t banno/graphite-elasticsearch:#{elasticsearch_version}-#{banno_version} elasticsearch"
-    sh "docker tag -f banno/graphite-elasticsearch:#{elasticsearch_version}-#{banno_version} banno/graphite-elasticsearch:latest"
-  end
-
   desc "Build haproxy proxy"
   task :haproxy do
     sh "docker build -t banno/graphite-haproxy:#{banno_version}-#{banno_version} haproxy"
     sh "docker tag -f banno/graphite-haproxy:#{banno_version}-#{banno_version} banno/graphite-haproxy:latest"
   end
- end
-
-## Enter for debugging
-namespace :enter do
-  desc "Enter a cache image"
-  task :cache do
-    sh "docker exec -it graphitesetup_cache1a_1 bash"
-  end
-
-  desc "Enter the main relay image"
-  task :relay do
-    sh "docker exec -it graphitesetup_relay_1 bash"
-  end
-
-  desc "Enter the main web image"
-  task :web do
-    sh "docker exec -it graphitesetup_web_1 bash"
-  end
-
-  desc "Enter the grafana image"
-  task :grafana do
-    sh "docker exec -it graphitesetup_grafana_1 bash"
-  end
-
-  desc "Enter the nginx image"
-  task :nginx do
-    sh "docker exec -it graphitesetup_nginx_1 bash"
-  end
 end
-## Upload everything to registry
 
 desc "Push all images to our registry"
 task :push do
   sh "docker push banno/carbon-base"
   sh "docker push banno/carbon-cache"
   sh "docker push banno/graphite-web"
-  sh "docker push banno/grafana"
-  sh "docker push banno/graphite-elasticsearch"
-  sh "docker push banno/graphite-nginx"
+  sh "docker push banno/graphite-haproxy"
 end
 
 ## testing
