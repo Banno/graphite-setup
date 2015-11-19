@@ -1,6 +1,6 @@
 FROM ubuntu:14.04
 
-ENV GRAPHITE_VERSION 0.9.13
+ENV GRAPHITE_VERSION 0.9.14
 
 RUN apt-get update && \
     apt-get -y install python-dev python-pip

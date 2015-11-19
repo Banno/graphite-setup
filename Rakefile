@@ -41,6 +41,7 @@ desc "Push all images to our registry"
 task :push do
   sh "docker push banno/carbon-base"
   sh "docker push banno/carbon-cache"
+  sh "docker push banno/carbon-relay"
   sh "docker push banno/graphite-web"
   sh "docker push banno/graphite-haproxy"
 end
