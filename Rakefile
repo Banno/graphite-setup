@@ -37,7 +37,7 @@ namespace :build do
   end
 end
 
-desc "Push all images to our registry"
+desc "Push all images to registry"
 task :push do
   sh "docker push banno/carbon-base"
   sh "docker push banno/carbon-cache"
