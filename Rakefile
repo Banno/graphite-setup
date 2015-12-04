@@ -1,4 +1,4 @@
-banno_version = "banno-0.0.2"
+banno_version = "banno-0.0.3"
 graphite_version = File.read("./carbon-base/Dockerfile").scan(/ENV GRAPHITE_VERSION ([0-9\.]+)/m)[0][0]
 
 ## Builders
