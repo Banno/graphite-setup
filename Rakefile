@@ -1,4 +1,4 @@
-banno_version = "banno-0.0.2"
+banno_version = "banno-0.0.3"
 graphite_version = File.read("./carbon-base/Dockerfile").scan(/ENV GRAPHITE_VERSION ([0-9\.]+)/m)[0][0]
 
 ## Builders
@@ -37,7 +37,7 @@ namespace :build do
   end
 end
 
-desc "Push all images to our registry"
+desc "Push all images to registry"
 task :push do
   sh "docker push banno/carbon-base"
   sh "docker push banno/carbon-cache"
