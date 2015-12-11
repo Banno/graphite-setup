@@ -1,4 +1,4 @@
-FROM banno/carbon-base
+FROM gengmao/carbon-base
 
 # Install Base Packages
 RUN apt-get -y update && \
@@ -38,4 +38,4 @@ RUN cd /opt/graphite/webapp/graphite && django-admin.py loaddata --settings=grap
 # Set CMD
 WORKDIR /opt/graphite/webapp
 EXPOSE 80
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]

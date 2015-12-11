@@ -1,23 +1,20 @@
-FROM banno/carbon-base
+FROM gengmao/carbon-base
 
-ENV NODE_NAME relay
-ENV LOCAL_DATA_DIR /opt/graphite/storage/whisper/
-ENV MAX_CACHE_SIZE inf
-ENV MAX_UPDATES_PER_SECOND 1000
-ENV MAX_CREATES_PER_MINUTE inf
-ENV LOG_UPDATES False
-ENV LINE_RECEIVER_INTERFACE 0.0.0.0
-ENV PICKLE_RECEIVER_INTERFACE 0.0.0.0
-ENV CACHE_QUERY_INTERFACE 0.0.0.0
-ENV LINE_RECEIVER_PORT 2003
-ENV PICKLE_RECEIVER_PORT 2004
-ENV CACHE_QUERY_PORT 7002
+RUN apt-get -y install supervisor
 
-ADD ./config /opt/graphite/conf/
-ADD run.sh /opt/graphite/
+ENV RELAY_METHOD consistent-hashing
+ENV DESTINATIONS localhost:2004
+ENV REPLICATION_FACTOR 1
 
-EXPOSE 2003 2004 7002
+ADD ./config/carbon.conf /opt/graphite/conf/carbon.conf
+ADD ./config/relay-rules.conf /opt/graphite/conf/relay-rules.conf
+ADD ./config/storage-aggregation.conf /opt/graphite/conf/storage-aggregation.conf
+ADD ./config/storage-schemas.conf /opt/graphite/conf/storage-schemas.conf
+ADD ./config/supervisord.conf /etc/supervisor/supervisord.conf
+ADD ./script /opt/graphite/bin/
+
+EXPOSE 2003 2004
 
 WORKDIR /opt/graphite
 
-ENTRYPOINT ["./run.sh"]
+CMD ["/opt/graphite/bin/start_carbon_relay.sh"]
