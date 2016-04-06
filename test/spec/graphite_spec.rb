@@ -8,7 +8,10 @@ describe 'graphite' do
 
   it 'writes the data to whisper' do
     client = GraphiteAPI.new( graphite: 'relay:2003' )
-    client.metrics("test.serverspec" => 1)
+    for i in 1..2 do
+      client.metrics("test.serverspec" => 1)
+      sleep 30
+    end
     sleep 5
     expect(file('/opt/graphite/storage/whispera/test/serverspec.wsp')).to be_file
     expect(file('/opt/graphite/storage/whisperb/test/serverspec.wsp')).to_not be_file
@@ -26,7 +29,7 @@ describe 'graphite' do
     conn = Faraday.new(:url => "http://web") do |faraday|
       faraday.adapter Faraday.default_adapter
     end
-    datapoints = JSON.parse(conn.get('/render?&target=test.serverspec&from=-1min&rawData=true&format=json').body).first['datapoints'].map {|k| k.first}
+    datapoints = JSON.parse(conn.get('/render?&target=test.serverspec&from=-2min&rawData=true&format=json').body).first['datapoints'].map {|k| k.first}
     unique_datapoints = datapoints.to_set.size
     expect(unique_datapoints).to be > 1
   end
