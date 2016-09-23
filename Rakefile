@@ -37,6 +37,15 @@ namespace :build do
   end
 end
 
+desc "Lint docker containers with lukasmartinelli/hadolint"
+task :lint do
+  dockerfiles = Dir.glob("*/Dockerfile")
+  dockerfiles.each do |dockerfile|
+    puts "#{dockerfile}"
+    sh "docker run --rm -i lukasmartinelli/hadolint < #{dockerfile}"
+  end
+end
+
 desc "Push all images to registry"
 task :push do
   sh "docker push banno/carbon-base"
