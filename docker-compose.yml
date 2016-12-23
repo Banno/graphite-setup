@@ -142,6 +142,24 @@ cacheb2:
     LOCAL_DATA_DIR: /opt/graphite/storage/whisperb
   command: --instance=b2
 
+backupa:
+  image: banno/whisper-backup
+  volumes_from:
+    - whisper
+  environment:
+    AWS_ACCESS_KEY_ID: AKIAI7LDM3NFHLUT44ZA
+    AWS_SECRET_ACCESS_KEY: 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
+  command: backup s3 --prefix=/opt/graphite/storage/whispera --bucket=nic-sandbox --storage-path=graphite/
+
+restorea:
+  image: banno/whisper-backup
+  volumes_from:
+    - whisper
+  environment:
+    AWS_ACCESS_KEY_ID: AKIAI7LDM3NFHLUT44ZA
+    AWS_SECRET_ACCESS_KEY: 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
+  command: restore s3 --prefix=/opt/graphite/storage/whispera --bucket=nic-sandbox --storage-path=graphite/
+
 whisper:
   image: busybox
   volumes:
