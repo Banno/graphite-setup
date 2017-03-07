@@ -9,41 +9,41 @@ namespace :build do
   desc "Build the base image"
   task :base do
     sh "docker build -t banno/carbon-base:#{graphite_version}-#{banno_version} carbon-base"
-    sh "docker tag -f banno/carbon-base:#{graphite_version}-#{banno_version} banno/carbon-base:latest"
+    sh "docker tag banno/carbon-base:#{graphite_version}-#{banno_version} banno/carbon-base:latest"
   end
 
   desc "Build the cache image"
   task :cache do
     sh "docker build -t banno/carbon-cache:#{graphite_version}-#{banno_version} carbon-cache"
-    sh "docker tag -f banno/carbon-cache:#{graphite_version}-#{banno_version} banno/carbon-cache:latest"
+    sh "docker tag banno/carbon-cache:#{graphite_version}-#{banno_version} banno/carbon-cache:latest"
   end
 
   desc "Build the web image"
   task :web do
     sh "docker build -t banno/graphite-web:#{graphite_version}-#{banno_version} web"
-    sh "docker tag -f banno/graphite-web:#{graphite_version}-#{banno_version} banno/graphite-web:latest"
+    sh "docker tag banno/graphite-web:#{graphite_version}-#{banno_version} banno/graphite-web:latest"
   end
 
   desc "Build the relay image"
   task :relay do
     sh "docker build -t banno/carbon-relay:#{graphite_version}-#{banno_version} carbon-relay"
-    sh "docker tag -f banno/carbon-relay:#{graphite_version}-#{banno_version} banno/carbon-relay:latest"
+    sh "docker tag banno/carbon-relay:#{graphite_version}-#{banno_version} banno/carbon-relay:latest"
   end
 
   desc "Build haproxy proxy"
   task :haproxy do
     sh "docker build -t banno/graphite-haproxy:#{banno_version}-#{banno_version} haproxy"
-    sh "docker tag -f banno/graphite-haproxy:#{banno_version}-#{banno_version} banno/graphite-haproxy:latest"
+    sh "docker tag banno/graphite-haproxy:#{banno_version}-#{banno_version} banno/graphite-haproxy:latest"
   end
 end
 
 desc "Push all images to registry"
 task :push do
-  sh "docker push banno/carbon-base"
-  sh "docker push banno/carbon-cache"
-  sh "docker push banno/carbon-relay"
-  sh "docker push banno/graphite-web"
-  sh "docker push banno/graphite-haproxy"
+  sh "docker push banno/carbon-base:#{graphite_version}-#{banno_version}"
+  sh "docker push banno/carbon-cache:#{graphite_version}-#{banno_version}"
+  sh "docker push banno/carbon-relay:#{graphite_version}-#{banno_version}"
+  sh "docker push banno/graphite-web:#{graphite_version}-#{banno_version}"
+  sh "docker push banno/graphite-haproxy:#{graphite_version}-#{banno_version}"
 end
 
 ## testing
