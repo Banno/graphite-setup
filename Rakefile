@@ -3,7 +3,7 @@ graphite_version = File.read("./carbon-base/Dockerfile").scan(/ENV GRAPHITE_VERS
 
 ## Builders
 desc "Builds all docker images"
-task :build => ["build:base", "build:cache", "build:web", "build:relay"]
+task :build => ["build:base", "build:cache", "build:web", "build:relay", "build:haproxy"]
 
 namespace :build do
   desc "Build the base image"
@@ -32,8 +32,8 @@ namespace :build do
 
   desc "Build haproxy proxy"
   task :haproxy do
-    sh "docker build -t banno/graphite-haproxy:#{banno_version}-#{banno_version} haproxy"
-    sh "docker tag banno/graphite-haproxy:#{banno_version}-#{banno_version} banno/graphite-haproxy:latest"
+    sh "docker build -t banno/graphite-haproxy:#{graphite_version}-#{banno_version} haproxy"
+    sh "docker tag banno/graphite-haproxy:#{graphite_version}-#{banno_version} banno/graphite-haproxy:latest"
   end
 end
 
